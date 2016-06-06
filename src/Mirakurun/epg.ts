@@ -17,6 +17,7 @@
 'use strict';
 
 import * as stream from 'stream';
+import * as common from './common';
 import db from './db';
 import ProgramItem from './ProgramItem';
 const aribts = require('aribts');
@@ -239,8 +240,8 @@ class EPG extends stream.Writable {
                         state.short.text_char = d.text_char;
 
                         state.program.update({
-                            name: new TsChar(d.event_name_char).decode(),
-                            description: new TsChar(d.text_char).decode()
+                            name: common.convertFullToHalfWidth(new TsChar(d.event_name_char).decode()),
+                            description: common.convertFullToHalfWidth(new TsChar(d.text_char).decode()),
                         });
 
                         break;

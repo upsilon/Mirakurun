@@ -17,6 +17,7 @@
 'use strict';
 
 import * as stream from 'stream';
+import * as common from './common';
 import * as log from './log';
 import epg from './epg';
 import _ from './_';
@@ -407,7 +408,7 @@ export default class TSFilter extends stream.Duplex {
 
             for (j = 0, m = data.services[i].descriptors.length; j < m; j++) {
                 if (data.services[i].descriptors[j].descriptor_tag === 0x48) {
-                    name = new aribts.TsChar(data.services[i].descriptors[j].service_name_char).decode();
+                    name = common.convertFullToHalfWidth(new aribts.TsChar(data.services[i].descriptors[j].service_name_char).decode());
                     break;
                 }
             }
