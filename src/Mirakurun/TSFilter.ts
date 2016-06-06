@@ -14,6 +14,7 @@
    limitations under the License.
 */
 import * as stream from "stream";
+import * as customize from "./customize";
 import * as log from "./log";
 import epg from "./epg";
 import status from "./status";
@@ -506,7 +507,7 @@ export default class TSFilter extends stream.Duplex {
             const m = service.descriptors.length;
             for (let j = 0; j < m; j++) {
                 if (service.descriptors[j].descriptor_tag === 0x48) {
-                    name = new aribts.TsChar(service.descriptors[j].service_name_char).decode();
+                    name = customize.convertFullWidthToHalf(new aribts.TsChar(service.descriptors[j].service_name_char).decode());
                     type = service.descriptors[j].service_type;
                 }
 

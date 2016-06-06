@@ -14,6 +14,7 @@
    limitations under the License.
 */
 import * as stream from "stream";
+import * as customize from "./customize";
 import * as log from "./log";
 import * as db from "./db";
 import _ from "./_";
@@ -258,8 +259,8 @@ class EPG extends stream.Writable {
                         state.short.text_char = d.text_char;
 
                         state.program.update({
-                            name: new TsChar(d.event_name_char).decode(),
-                            description: new TsChar(d.text_char).decode()
+                            name: customize.convertFullWidthToHalf(new TsChar(d.event_name_char).decode()),
+                            description: customize.convertFullWidthToHalf(new TsChar(d.text_char).decode())
                         });
 
                         break;
