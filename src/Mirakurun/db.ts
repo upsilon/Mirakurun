@@ -46,6 +46,7 @@ module db {
 
         name?: string;
         description?: string;
+        long_description?: string;
         genres?: ProgramGenre[];
         //attributes: string[];
         video?: ProgramVideo;

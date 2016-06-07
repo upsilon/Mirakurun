@@ -255,6 +255,8 @@ definitions:
         type: string
       description:
         type: string
+      long_description:
+        type: string
       genres:
         type: array
         items:

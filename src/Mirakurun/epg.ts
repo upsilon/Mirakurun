@@ -87,6 +87,7 @@ interface EventState {
     }
     extended: {
         version: number;//extended
+        descriptors: ExtendedDescriptorItem[][];
     }
     component: {
         version: number;//basic
@@ -105,6 +106,11 @@ interface EventState {
         version: number;//basic
         _raw: Buffer;
     }
+}
+
+interface ExtendedDescriptorItem {
+    description: Buffer,
+    text: Buffer,
 }
 
 interface VersionState {
@@ -172,7 +178,8 @@ class EPG extends stream.Writable {
                         text_char: null
                     },
                     extended: {
-                        version: -1
+                        version: -1,
+                        descriptors: null,
                     },
                     component: {
                         version: -1,
@@ -245,9 +252,56 @@ class EPG extends stream.Writable {
 
                         break;
 
-                    // extended_event
+                    // 拡張形式イベント記述子 (ARIB STD-B10 5.8版 第2部 6.2.7, ARIB TR-B14 6.1版 第4編 31.3.2.11)
                     case 0x4E:
-                        //
+                        if (state.extended.version !== eit.version_number) {
+                            state.extended.version = eit.version_number;
+
+                            state.extended.descriptors = [];
+
+                            // descriptor_number は 0 から開始される
+                            for (let i = 0, l = d.last_descriptor_number; i <= l; i++) {
+                                state.extended.descriptors[i] = null;
+                            }
+                        }
+                        if (state.extended.descriptors[d.descriptor_number] !== null) {
+                            break;
+                        }
+
+                        state.extended.descriptors[d.descriptor_number] = d.items.map(x => ({
+                            description: x.item_description_char, // 項目名 (「番組内容」「出演者」など)
+                            text: x.item_char, // 項目記述
+                        }));
+
+                        // descriptors が全て埋まったら文字列に変換する
+                        if (state.extended.descriptors.every(x => x !== null)) {
+                            const longdesc_items: [string, Buffer][] = [];
+
+                            for (let items of state.extended.descriptors) {
+                                for (let item of items) {
+                                    const description = new TsChar(item.description).decode();
+
+                                    // description が空文字列の場合は、item.text を一つ前の続きとして扱う
+                                    // マルチバイト文字が分断されている場合があるためこの時点では string にデコードできない
+                                    if (description === '' && longdesc_items.length !== 0) {
+                                        const before_item = longdesc_items[longdesc_items.length - 1];
+                                        before_item[1] = Buffer.concat([before_item[1], item.text]);
+                                        continue;
+                                    }
+
+                                    longdesc_items.push([description, item.text]);
+                                }
+                            }
+
+                            const longdescs = longdesc_items.map(item => {
+                                const text = new TsChar(item[1]).decode();
+                                return item[0] + '\r\n' + text;
+                            });
+
+                            state.program.update({
+                                long_description: longdescs.join('\r\n\r\n'),
+                            });
+                        }
 
                         break;
 
