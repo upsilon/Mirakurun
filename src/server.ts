@@ -42,8 +42,8 @@ process.on('uncaughtException', err => {
 setEnv('SERVER_CONFIG_PATH', '/usr/local/etc/mirakurun/server.yml');
 setEnv('TUNERS_CONFIG_PATH', '/usr/local/etc/mirakurun/tuners.yml');
 setEnv('CHANNELS_CONFIG_PATH', '/usr/local/etc/mirakurun/channels.yml');
-setEnv('SERVICES_DB_PATH', '/usr/local/var/db/mirakurun/services.json');
-setEnv('PROGRAMS_DB_PATH', '/usr/local/var/db/mirakurun/programs.json');
+setEnv('SERVICES_DB_PATH', '/usr/local/var/lib/mirakurun/services.json');
+setEnv('PROGRAMS_DB_PATH', '/usr/local/var/lib/mirakurun/programs.json');
 
 if (process.platform === 'linux') {
     execSync(`renice -n -10 -p ${ process.pid }`);

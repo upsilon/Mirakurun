@@ -31,9 +31,9 @@ if (process.platform === 'linux' || process.platform === 'darwin') {
     }
 
     child_process.execSync('mkdir -vp /usr/local/etc/mirakurun');
-    child_process.execSync('mkdir -vp /usr/local/var/log');
-    child_process.execSync('mkdir -vp /usr/local/var/run');
-    child_process.execSync('mkdir -vp /usr/local/var/db/mirakurun');
+    child_process.execSync('mkdir -vp /usr/local/var/log/mirakurun');
+    child_process.execSync('mkdir -vp /usr/local/var/run/mirakurun');
+    child_process.execSync('mkdir -vp /usr/local/var/lib/mirakurun');
 
     child_process.execSync('cp -vn config/server.yml /usr/local/etc/mirakurun/server.yml');
     child_process.execSync('cp -vn config/tuners.yml /usr/local/etc/mirakurun/tuners.yml');

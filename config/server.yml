@@ -1,4 +1,4 @@
-path: /var/run/mirakurun.sock
+path: /usr/local/var/run/mirakurun/mirakurun.sock
 
 port: ~
 
