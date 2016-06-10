@@ -65,6 +65,13 @@ if (process.platform === "linux" || process.platform === "darwin") {
         copyFileSync("config/channels.yml", channelsConfigPath);
     }
 
+    child_process.execSync('id mirakurun 2>&1 > /dev/null || useradd -r -G video -d /usr/local/var/lib/mirakurun -s /bin/false mirakurun');
+
+    child_process.execSync('chown -R mirakurun:mirakurun /usr/local/etc/mirakurun');
+    child_process.execSync('chown -R mirakurun:mirakurun /usr/local/var/log/mirakurun');
+    child_process.execSync('chown -R mirakurun:mirakurun /usr/local/var/run/mirakurun');
+    child_process.execSync('chown -R mirakurun:mirakurun /usr/local/var/lib/mirakurun');
+
     // pm2
 
     if (process.env.DOCKER === "YES") {
@@ -86,7 +93,7 @@ if (process.platform === "linux" || process.platform === "darwin") {
     }
 
     try {
-        child_process.execSync(`pm2 startup`, {
+        child_process.execSync("pm2 startup -u mirakurun --hp /usr/local/var/lib/mirakurun", {
             stdio: [
                 null,
                 process.stdout,
@@ -97,7 +104,7 @@ if (process.platform === "linux" || process.platform === "darwin") {
         console.log("Caution: `pm2 startup` has failed. you can try fix yourself.");
     }
 
-    child_process.execSync("pm2 start processes.json", {
+    child_process.execSync("sudo -u mirakurun pm2 start processes.json", {
         stdio: [
             null,
             process.stdout,
@@ -105,7 +112,7 @@ if (process.platform === "linux" || process.platform === "darwin") {
         ]
     });
 
-    child_process.execSync("pm2 save", {
+    child_process.execSync("sudo -u mirakurun pm2 save", {
         stdio: [
             null,
             process.stdout,

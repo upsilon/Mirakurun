@@ -13,12 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
-if (process.platform !== "win32") {
-    if (process.getuid() !== 0) {
-        console.error("root please.");
-        process.exit(1);
-    }
-}
 
 import { execSync } from "child_process";
 import _ from "./Mirakurun/_";
@@ -44,11 +38,6 @@ setEnv("TUNERS_CONFIG_PATH", "/usr/local/etc/mirakurun/tuners.yml");
 setEnv("CHANNELS_CONFIG_PATH", "/usr/local/etc/mirakurun/channels.yml");
 setEnv("SERVICES_DB_PATH", "/usr/local/var/lib/mirakurun/services.json");
 setEnv("PROGRAMS_DB_PATH", "/usr/local/var/lib/mirakurun/programs.json");
-
-if (process.platform === "linux") {
-    execSync(`renice -n -10 -p ${ process.pid }`);
-    execSync(`ionice -c 1 -n 7 -p ${ process.pid }`);
-}
 
 _.config.server = config.loadServer();
 _.config.channels = config.loadChannels();
