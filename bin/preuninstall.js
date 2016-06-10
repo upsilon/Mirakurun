@@ -26,7 +26,7 @@ if (process.platform === "linux" || process.platform === "darwin") {
         process.exit(0);
     }
 
-    execSync("pm2 stop mirakurun-server", {
+    execSync("sudo -u mirakurun pm2 stop mirakurun-server", {
         stdio: [
             null,
             process.stdout,
@@ -34,7 +34,7 @@ if (process.platform === "linux" || process.platform === "darwin") {
         ]
     });
 
-    execSync("pm2 delete mirakurun-server", {
+    execSync("sudo -u mirakurun pm2 delete mirakurun-server", {
         stdio: [
             null,
             process.stdout,

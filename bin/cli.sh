@@ -81,23 +81,23 @@ mirakurun_config () {
 }
 
 mirakurun_log () {
-  pm2 logs mirakurun-server "$@" && return 0
+  sudo -u mirakurun pm2 logs mirakurun-server "$@" && return 0
 }
 
 mirakurun_status () {
-  pm2 status && return 0
+  sudo -u mirakurun pm2 status && return 0
 }
 
 mirakurun_start () {
-  pm2 start mirakurun-server && return 0
+  sudo -u mirakurun pm2 start mirakurun-server && return 0
 }
 
 mirakurun_stop () {
-  pm2 stop mirakurun-server && return 0
+  sudo -u mirakurun pm2 stop mirakurun-server && return 0
 }
 
 mirakurun_restart() {
-  pm2 restart mirakurun-server && return 0
+  sudo -u mirakurun pm2 restart mirakurun-server && return 0
 }
 
 mirakurun_version () {
