@@ -28,7 +28,7 @@ if (process.platform === 'linux' || process.platform === 'darwin') {
         process.exit(0);
     }
 
-    child_process.execSync('pm2 stop processes.json -s', {
+    child_process.execSync('id mirakurun 2>&1 > /dev/null && sudo -u mirakurun pm2 stop processes.json -s', {
         stdio: [
             null,
             process.stdout,
@@ -36,7 +36,7 @@ if (process.platform === 'linux' || process.platform === 'darwin') {
         ]
     });
 
-    child_process.execSync('pm2 delete processes.json -s', {
+    child_process.execSync('id mirakurun 2>&1 > /dev/null && sudo -u mirakurun pm2 delete processes.json -s', {
         stdio: [
             null,
             process.stdout,

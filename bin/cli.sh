@@ -77,7 +77,7 @@ mirakurun_config () {
 mirakurun_log () {
   case $1 in
     server )
-      pm2 logs mirakurun-$1
+      sudo -u mirakurun pm2 logs mirakurun-$1
       ;;
     *)
       mirakurun_help
@@ -88,19 +88,19 @@ mirakurun_log () {
 }
 
 mirakurun_status () {
-  pm2 status && return 0
+  sudo -u mirakurun pm2 status && return 0
 }
 
 mirakurun_start () {
-  pm2 start processes.json && return 0
+  sudo -u mirakurun pm2 start processes.json && return 0
 }
 
 mirakurun_stop () {
-  pm2 stop processes.json && return 0
+  sudo -u mirakurun pm2 stop processes.json && return 0
 }
 
 mirakurun_restart() {
-  pm2 restart processes.json && return 0
+  sudo -u mirakurun pm2 restart processes.json && return 0
 }
 
 mirakurun_help () {
