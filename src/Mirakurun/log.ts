@@ -17,6 +17,7 @@
 'use strict';
 
 import * as util from 'util';
+const moment = require('moment');
 
 export enum LogLevel {
     'FATAL' = -1,
@@ -29,7 +30,7 @@ export enum LogLevel {
 export let logLevel: LogLevel = LogLevel.INFO;
 
 function getLogString(lvstr: string, msgs: any[]) {
-    return new Date().toISOString() + ' ' + lvstr + ': ' + util.format.apply(null, msgs);
+    return moment().format() + ' ' + lvstr + ': ' + util.format.apply(null, msgs);
 }
 
 export function debug(...msgs: any[]);

@@ -57,6 +57,7 @@
     "express": "^4.13.4",
     "express-openapi": "^0.22.0",
     "js-yaml": "^3.5.2",
+    "moment": "^2.13.0",
     "morgan": "^1.7.0",
     "promise-queue": "^2.2.3"
   },
