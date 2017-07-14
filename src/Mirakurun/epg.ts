@@ -78,7 +78,7 @@ const SAMPLING_RATE = {
     7: 48000
 };
 
-interface EventState {
+export interface EventState {
     version: VersionState;
     program: ProgramItem;
 
@@ -267,6 +267,10 @@ class EPG extends stream.Writable {
 
                     // extended_event
                     case 0x4E:
+                        // upstreamで修正されたっぽいので様子見
+                        // customize.updateEventStateExtended(state, eit, d);
+                        // break;
+
                         if (state.extended.version !== eit.version_number) {
                             state.extended.version = eit.version_number;
                             state.extended._descs = new Array(d.last_descriptor_number + 1);
