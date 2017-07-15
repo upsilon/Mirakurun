@@ -14,6 +14,7 @@
    limitations under the License.
 */
 import * as stream from "stream";
+import * as customize from "./customize";
 import * as log from "./log";
 import * as db from "./db";
 import _ from "./_";
@@ -77,7 +78,7 @@ const SAMPLING_RATE = {
     7: 48000
 };
 
-interface EventState {
+export interface EventState {
     version: VersionState;
     program: ProgramItem;
 
@@ -258,61 +259,15 @@ class EPG extends stream.Writable {
                         state.short.text_char = d.text_char;
 
                         state.program.update({
-                            name: new TsChar(d.event_name_char).decode(),
-                            description: new TsChar(d.text_char).decode()
+                            name: customize.convertFullWidthToHalf(new TsChar(d.event_name_char).decode()),
+                            description: customize.convertFullWidthToHalf(new TsChar(d.text_char).decode())
                         });
 
                         break;
 
                     // extended_event
                     case 0x4E:
-                        if (state.extended.version !== eit.version_number) {
-                            state.extended.version = eit.version_number;
-                            state.extended._descs = new Array(d.last_descriptor_number + 1);
-                            state.extended._done = false;
-                        } else if (state.extended._done === true) {
-                            break;
-                        }
-
-                        if (state.extended._descs[d.descriptor_number] === undefined) {
-                            state.extended._descs[d.descriptor_number] = d.items;
-
-                            let comp = true;
-                            for (const descs of state.extended._descs) {
-                                if (descs === undefined) {
-                                    comp = false;
-                                    break;
-                                }
-                            }
-                            if (comp === false) {
-                                break;
-                            }
-
-                            const extended: any = {};
-
-                            let current = "";
-                            for (const descs of state.extended._descs) {
-                                for (const desc of descs) {
-                                    const key = desc.item_description_length === 0
-                                                ? current
-                                                : new TsChar(desc.item_description_char).decode();
-                                    current = key;
-
-                                    const char = new TsChar(desc.item_char).decode();
-                                    if (extended[key] === undefined) {
-                                        extended[key] = char;
-                                    } else {
-                                        extended[key] += char;
-                                    }
-                                }
-                            }
-
-                            state.program.update({
-                                extended: extended
-                            });
-
-                            state.extended._done = true; // done
-                        }
+                        customize.updateEventStateExtended(state, eit, d);
 
                         break;
 
